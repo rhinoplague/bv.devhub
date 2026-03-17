@@ -1,0 +1,14 @@
+{
+  "name": "Bon Voyage",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Bon Voyage — Dev Hub for game studio project management",
+  "scripts": {
+    "dev": "wrangler pages dev . --kv BV_KV",
+    "deploy": "wrangler pages deploy .",
+    "kv:create": "wrangler kv:namespace create BV_KV"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
