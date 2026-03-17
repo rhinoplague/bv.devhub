@@ -5,19 +5,339 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hunter × Game — Dev Hub</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/login.css">
-  <link rel="stylesheet" href="css/themes.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══ RESET ═══ */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg-primary: #0d0b0e;
+      --bg-secondary: #151218;
+      --bg-tertiary: #1c1822;
+      --bg-elevated: #221e2b;
+      --bg-glass: rgba(13, 11, 14, 0.7);
+      --bg-glass-light: rgba(28, 24, 34, 0.4);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --text-primary: #f0ece4;
+      --text-secondary: #9a9196;
+      --text-tertiary: #635c66;
+      --accent-primary: #e8793b;
+      --accent-primary-hover: #f08a4f;
+      --accent-primary-glow: rgba(232, 121, 59, 0.25);
+      --accent-secondary: #c084fc;
+      --status-critical: #ef4444;
+      --radius-md: 10px;
+      --radius-xl: 20px;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    ::selection {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 9999px; }
+
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes ambientPulse {
+      0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+    }
+    @keyframes floatParticle {
+      0% { opacity: 0; transform: translateY(100vh) translateX(0); }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { opacity: 0; transform: translateY(-10vh) translateX(50px); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    /* ═══ LOGIN LAYOUT ═══ */
+    .login-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-page::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-primary-glow) 0%, transparent 70%);
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(80px);
+      animation: ambientPulse 6s ease-in-out infinite;
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatParticle linear infinite;
+    }
+
+    /* ═══ LOGIN CARD ═══ */
+    .login-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 440px;
+      padding: 1.5rem;
+    }
+
+    .login-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6);
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .login-logo__title {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-logo__x {
+      color: var(--accent-primary);
+      margin: 0 0.5rem;
+      display: inline-block;
+      filter: drop-shadow(0 0 8px var(--accent-primary-glow));
+    }
+
+    .login-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ═══ FORM ═══ */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-group__input {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.925rem;
+      transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+      outline: none;
+    }
+
+    .input-group__input::placeholder {
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+    }
+
+    .input-group__input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-primary-glow);
+      background: var(--bg-elevated);
+    }
+
+    .input-group__icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      font-size: 1rem;
+      pointer-events: none;
+      transition: color 150ms ease;
+    }
+
+    .input-group__input:focus ~ .input-group__icon {
+      color: var(--accent-primary);
+    }
+
+    /* ═══ BUTTON ═══ */
+    .login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--accent-primary), #c55a20);
+      border: none;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+
+    .login-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .login-btn:hover {
+      box-shadow: 0 0 30px var(--accent-primary-glow), 0 4px 12px rgba(0,0,0,0.4);
+      transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-btn .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto;
+    }
+
+    .login-btn--loading .spinner { display: block; }
+    .login-btn--loading .login-btn__text { display: none; }
+
+    /* ═══ ERROR ═══ */
+    .login-error {
+      padding: 0.75rem;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: var(--radius-md);
+      color: var(--status-critical);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      display: none;
+    }
+
+    .login-error--visible {
+      display: block;
+      animation: slideUp 150ms ease;
+    }
+
+    /* ═══ FOOTER ═══ */
+    .login-footer {
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      line-height: 1.6;
+    }
+
+    .login-footer__highlight {
+      color: var(--accent-secondary);
+    }
+
+    .shake {
+      animation: shake 0.4s ease;
+    }
+  </style>
 </head>
 <body class="login-page" id="loginPage">
 
-  <!-- Floating particles -->
   <div class="particles" id="particles"></div>
 
   <div class="login-container">
     <div class="login-card">
-      <!-- Logo -->
       <div class="login-logo">
         <h1 class="login-logo__title">
           HUNTER<span class="login-logo__x">×</span>GAME
@@ -26,37 +346,19 @@
 
       <p class="login-subtitle">Dev Hub — Team Access Only</p>
 
-      <!-- Error message -->
       <div class="login-error" id="loginError">
         Invalid credentials. Try again.
       </div>
 
-      <!-- Form -->
       <form class="login-form" id="loginForm" autocomplete="off">
         <div class="input-group">
-          <input
-            type="text"
-            class="input-group__input"
-            id="loginUsername"
-            placeholder="username"
-            required
-            autocomplete="username"
-          >
+          <input type="text" class="input-group__input" id="loginUsername" placeholder="username" required autocomplete="username">
           <span class="input-group__icon">👤</span>
         </div>
-
         <div class="input-group">
-          <input
-            type="password"
-            class="input-group__input"
-            id="loginPassword"
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-          >
+          <input type="password" class="input-group__input" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
           <span class="input-group__icon">🔒</span>
         </div>
-
         <button type="submit" class="login-btn" id="loginBtn">
           <span class="login-btn__text">Enter</span>
           <span class="spinner"></span>
@@ -70,21 +372,76 @@
     </div>
   </div>
 
-  <script src="js/auth.js"></script>
   <script>
-    // Particle generation
+    /* ═══ PARTICLES ═══ */
     (function() {
-      const container = document.getElementById('particles');
+      const c = document.getElementById('particles');
       for (let i = 0; i < 30; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
         p.style.left = Math.random() * 100 + '%';
         p.style.animationDuration = (8 + Math.random() * 12) + 's';
         p.style.animationDelay = Math.random() * 8 + 's';
-        p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
-        container.appendChild(p);
+        const size = (1 + Math.random() * 2) + 'px';
+        p.style.width = size;
+        p.style.height = size;
+        c.appendChild(p);
       }
     })();
+
+    /* ═══ AUTH ═══ */
+    const KV = 'hxg_';
+    const defaultAccounts = {
+      admin: { password: 'admin123', role: 'admin' },
+      dev: { password: 'dev123', role: 'dev' },
+      guest: { password: 'guest', role: 'guest' }
+    };
+
+    function getAccounts() {
+      const raw = localStorage.getItem(KV + 'accounts');
+      if (raw) { try { return JSON.parse(raw); } catch(e) {} }
+      return { ...defaultAccounts };
+    }
+
+    // Redirect if already logged in
+    if (localStorage.getItem(KV + 'token')) {
+      window.location.href = 'hub.html';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('loginError');
+
+      if (!username || !password) return;
+
+      btn.classList.add('login-btn--loading');
+      btn.disabled = true;
+      err.classList.remove('login-error--visible');
+
+      await new Promise(r => setTimeout(r, 600));
+
+      const accounts = getAccounts();
+      const account = accounts[username];
+
+      if (account && account.password === password) {
+        localStorage.setItem(KV + 'token', 'local_' + Date.now());
+        localStorage.setItem(KV + 'username', username);
+        localStorage.setItem(KV + 'role', account.role);
+        document.querySelector('.login-card').style.opacity = '0';
+        document.querySelector('.login-card').style.transform = 'translateY(-20px)';
+        document.querySelector('.login-card').style.transition = 'all 0.3s ease';
+        setTimeout(() => { window.location.href = 'hub.html'; }, 300);
+      } else {
+        btn.classList.remove('login-btn--loading');
+        btn.disabled = false;
+        err.classList.add('login-error--visible');
+        document.getElementById('loginForm').classList.add('shake');
+        setTimeout(() => document.getElementById('loginForm').classList.remove('shake'), 400);
+      }
+    });
   </script>
 </body>
 </html>
