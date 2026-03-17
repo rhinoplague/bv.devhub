@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hunter × Game — Dev Hub</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/hub.css">
+  <link rel="stylesheet" href="css/roadmap.css">
+  <link rel="stylesheet" href="css/tasks.css">
+  <link rel="stylesheet" href="css/activity.css">
+  <link rel="stylesheet" href="css/modals.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/themes.css">
+</head>
+<body>
+  <div class="hub" id="hub">
+
+    <!-- ── Banner ── -->
+    <div class="banner" id="banner">
+      <div class="banner__content">
+        <span class="banner__icon">💡</span>
+        <span>You can change your password in Settings</span>
+      </div>
+      <button class="banner__close" id="bannerClose" aria-label="Close banner">✕</button>
+    </div>
+
+    <!-- ── Header ── -->
+    <header class="header">
+      <div class="header__left">
+        <h1 class="header__logo">
+          HUNTER<span class="header__logo-x">×</span>GAME
+        </h1>
+        <span class="header__label">Dev Hub</span>
+      </div>
+      <div class="header__right">
+        <span class="header__status header__status--synced" id="syncStatus">
+          <span class="dot"></span>
+          Synced
+        </span>
+        <span class="header__role" id="userRole">GUEST</span>
+
+        <div class="header__divider"></div>
+
+        <button class="icon-btn" data-tooltip="Search" id="btnSearch">🔍</button>
+        <button class="icon-btn" data-tooltip="AI Draft" id="btnAI">✨</button>
+        <button class="icon-btn" data-tooltip="Team Chat" id="btnChat">💬</button>
+        <button class="icon-btn" data-tooltip="Settings" id="btnSettings">⚙️</button>
+        <button class="icon-btn" data-tooltip="Logout" id="btnLogout">🚪</button>
+      </div>
+    </header>
+
+    <!-- ── Nav Tabs ── -->
+    <nav class="nav" id="navTabs">
+      <button class="nav__tab nav__tab--active" data-tab="roadmap">
+        <span class="nav__tab-icon">🗺️</span>
+        Roadmap
+      </button>
+      <button class="nav__tab" data-tab="tasks">
+        <span class="nav__tab-icon">👥</span>
+        Team Tasks
+      </button>
+      <button class="nav__tab" data-tab="activity">
+        <span class="nav__tab-icon">⚡</span>
+        Activity
+      </button>
+    </nav>
+
+    <!-- ── Sub-header ── -->
+    <div class="sub-header">
+      <div class="sub-header__left">
+        <span class="sub-header__stat" id="taskCount">0/8 roadmap tasks</span>
+      </div>
+      <div class="sub-header__right">
+        <span class="sub-header__stat" id="releaseReady">0% release ready</span>
+      </div>
+    </div>
+
+    <!-- ── Main Content ── -->
+    <main class="main">
+
+      <!-- Roadmap -->
+      <section class="page-section page-section--active" id="sectionRoadmap">
+        <div class="roadmap">
+          <aside class="roadmap__sidebar" id="roadmapSidebar">
+            <!-- Populated by JS -->
+          </aside>
+          <div class="roadmap__content" id="roadmapContent">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Team Tasks -->
+      <section class="page-section" id="sectionTasks">
+        <div class="tasks__header">
+          <h2 class="tasks__title">
+            TEAM <span class="tasks__title-accent">TASKS</span>
+          </h2>
+          <div class="tasks__actions">
+            <button class="btn btn--sm" id="btnHideDone">Hide Done</button>
+            <button class="btn btn--primary btn--sm" id="btnAddTask">+ Task</button>
+          </div>
+        </div>
+        <div class="role-tabs" id="roleTabs">
+          <!-- Populated by JS -->
+        </div>
+        <div id="roleContent">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Activity -->
+      <section class="page-section" id="sectionActivity">
+        <div class="activity__header">
+          <h2 class="activity__title">
+            ACTIVITY <span class="activity__title-accent">FEED</span>
+          </h2>
+          <div class="activity__filters">
+            <button class="btn btn--sm btn--ghost">All</button>
+            <button class="btn btn--sm btn--ghost">Tasks</button>
+            <button class="btn btn--sm btn--ghost">Roadmap</button>
+          </div>
+        </div>
+        <div class="activity-feed" id="activityFeed">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ── Search Modal ── -->
+  <div class="overlay" id="searchOverlay"></div>
+  <div class="search-modal" id="searchModal">
+    <div class="search-modal__card">
+      <div class="search-modal__input-row">
+        <span class="search-modal__icon">🔮</span>
+        <input
+          type="text"
+          class="search-modal__input"
+          id="searchInput"
+          placeholder="Search tasks, features, roles…"
+        >
+        <span class="search-modal__esc">ESC</span>
+      </div>
+      <div class="search-modal__body" id="searchBody">
+        <div class="search-modal__hint">Start typing to search…</div>
+      </div>
+      <div class="search-modal__footer">
+        <span class="search-modal__shortcut"><kbd>↑↓</kbd> navigate</span>
+        <span class="search-modal__shortcut"><kbd>↵</kbd> jump to</span>
+        <span class="search-modal__shortcut"><kbd>ESC</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI Draft Panel ── -->
+  <div class="ai-panel" id="aiPanel">
+    <div class="ai-panel__header">
+      <div class="ai-panel__title">
+        <span class="ai-panel__title-icon">✨</span>
+        AI Draft
+      </div>
+      <button class="ai-panel__close" id="aiPanelClose">✕</button>
+    </div>
+    <div class="ai-panel__body">
+      <div>
+        <div class="ai-panel__section-label">Mode</div>
+        <div class="ai-panel__mode-toggle">
+          <button class="ai-panel__mode-btn ai-panel__mode-btn--active" data-mode="roadmap">Roadmap</button>
+          <button class="ai-panel__mode-btn" data-mode="tasks">Team Tasks</button>
+        </div>
+      </div>
+      <div>
+        <div class="ai-panel__section-label">Notes / GDD Excerpt</div>
+        <textarea
+          class="ai-panel__textarea"
+          id="aiTextarea"
+          placeholder="Describe a feature, paste GDD notes..."
+        ></textarea>
+      </div>
+      <button class="ai-panel__generate-btn" id="aiGenerateBtn">
+        Generate →
+      </button>
+      <div class="ai-panel__output" id="aiOutput">
+        <div class="ai-panel__output-header">
+          <span class="ai-panel__output-title">Generated Draft</span>
+          <div class="ai-panel__output-actions">
+            <button class="btn btn--sm btn--ghost" id="aiCopyBtn">Copy</button>
+            <button class="btn btn--sm btn--primary" id="aiApplyBtn">Apply</button>
+          </div>
+        </div>
+        <div class="ai-panel__output-content" id="aiOutputContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chat Panel ── -->
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel__header">
+      <span class="chat-panel__title">💬 Team Chat</span>
+      <button class="chat-panel__close" id="chatPanelClose">✕</button>
+    </div>
+    <div class="chat-panel__messages" id="chatMessages">
+      <div class="chat-panel__empty">No messages yet. Say hello! 👋</div>
+    </div>
+    <div class="chat-panel__input-row">
+      <input
+        type="text"
+        class="chat-panel__input"
+        id="chatInput"
+        placeholder="Type a message..."
+      >
+      <button class="chat-panel__send" id="chatSend">➤</button>
+    </div>
+  </div>
+
+  <!-- ── Settings Panel ── -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-panel__header">
+      <span class="settings-panel__title">Settings</span>
+      <button class="settings-panel__close" id="settingsPanelClose">✕</button>
+    </div>
+    <div class="settings-panel__body">
+
+      <!-- UI Scale -->
+      <div class="settings-section">
+        <div class="settings-section__label">UI Scale</div>
+        <div class="scale-controls">
+          <button class="scale-controls__btn" id="scaleDown">−</button>
+          <span class="scale-controls__value" id="scaleValue">100%</span>
+          <button class="scale-controls__btn" id="scaleUp">+</button>
+          <button class="btn btn--sm btn--ghost scale-controls__reset" id="scaleReset">Reset</button>
+        </div>
+        <div class="settings-section__desc">Adjusts text and element size. Saved per device.</div>
+      </div>
+
+      <!-- Color Theme -->
+      <div class="settings-section">
+        <div class="settings-section__label">Color Theme</div>
+        <div class="theme-cards" id="themeCards">
+          <div class="theme-card theme-card--active" data-theme="obsidian">
+            <span class="theme-card__name">Obsidian (Default)</span>
+            <div class="theme-card__dots">
+              <span class="theme-card__dot" style="background:#f0ece4"></span>
+              <span class="theme-card__dot" style="background:#e8793b"></span>
+              <span class="theme-card__dot" style="background:#c084fc"></span>
+            </div>
+          </div>
+          <div class="theme-card" data-theme="dawn-pastel">
+            <span class="theme-card__name">Dawn Pastel</span>
+            <div class="theme-card__dots">
+              <span class="theme-card__dot" style="background:#f0ece4"></span>
+              <span class="theme-card__dot" style="background:#f472b6"></span>
+              <span class="theme-card__dot" style="background:#c084fc"></span>
+            </div>
+          </div>
+          <div class="theme-card" data-theme="neon-grid">
+            <span class="theme-card__name">Neon Grid</span>
+            <div class="theme-card__dots">
+              <span class="theme-card__dot" style="background:#f0ece4"></span>
+              <span class="theme-card__dot" style="background:#22d3ee"></span>
+              <span class="theme-card__dot" style="background:#a3e635"></span>
+            </div>
+          </div>
+        </div>
+        <div class="settings-section__desc">Changes dashboard colors and accents. Saved per device.</div>
+      </div>
+
+      <!-- Upload Preprocessing -->
+      <div class="settings-section">
+        <div class="settings-section__label">Upload Preprocessing</div>
+        <div class="toggle-row">
+          <div class="toggle-row__label">
+            <span class="toggle-row__title">Compress images/videos before upload</span>
+            <span class="toggle-row__desc">Disable on low-end devices if uploads feel slow.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="compressToggle" checked>
+            <span class="toggle__slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="settings-section">
+        <div class="settings-section__label">Change Password</div>
+        <div class="password-section">
+          <input type="password" class="input-group__input" placeholder="Current password" id="currentPassword">
+          <input type="password" class="input-group__input" placeholder="New password" id="newPassword">
+          <button class="btn btn--primary btn--sm" id="changePasswordBtn">Update Password</button>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div class="settings-section settings-section--danger">
+        <button class="btn btn--danger" id="settingsLogout">🚪 Logout</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Toast Container ── -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/roadmap.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/activity.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/ai-draft.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
