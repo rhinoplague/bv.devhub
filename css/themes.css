@@ -1,0 +1,49 @@
+/* ============================================
+   Color Themes
+   ============================================ */
+
+/* ── Dawn Pastel ── */
+[data-theme="dawn-pastel"] {
+  --bg-primary: #1a1520;
+  --bg-secondary: #201a28;
+  --bg-tertiary: #271f30;
+  --bg-elevated: #2e2538;
+  --bg-card: rgba(39, 31, 48, 0.6);
+  --bg-card-hover: rgba(46, 37, 56, 0.8);
+  --bg-glass: rgba(26, 21, 32, 0.7);
+  --bg-glass-light: rgba(39, 31, 48, 0.4);
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-accent: rgba(244, 114, 182, 0.3);
+
+  --accent-primary: #f472b6;
+  --accent-primary-hover: #f9a8d4;
+  --accent-primary-glow: rgba(244, 114, 182, 0.25);
+  --accent-secondary: #c084fc;
+  --accent-secondary-glow: rgba(192, 132, 252, 0.2);
+}
+
+/* ── Neon Grid ── */
+[data-theme="neon-grid"] {
+  --bg-primary: #0a0e14;
+  --bg-secondary: #0e1319;
+  --bg-tertiary: #131920;
+  --bg-elevated: #182028;
+  --bg-card: rgba(19, 25, 32, 0.6);
+  --bg-card-hover: rgba(24, 32, 40, 0.8);
+  --bg-glass: rgba(10, 14, 20, 0.7);
+  --bg-glass-light: rgba(19, 25, 32, 0.4);
+
+  --border-subtle: rgba(56, 189, 248, 0.06);
+  --border-default: rgba(56, 189, 248, 0.1);
+  --border-strong: rgba(56, 189, 248, 0.16);
+  --border-accent: rgba(34, 211, 238, 0.3);
+
+  --accent-primary: #22d3ee;
+  --accent-primary-hover: #67e8f9;
+  --accent-primary-glow: rgba(34, 211, 238, 0.25);
+  --accent-secondary: #a3e635;
+  --accent-secondary-glow: rgba(163, 230, 53, 0.2);
+}
