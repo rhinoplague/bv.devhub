@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hunter × Game — Dev Hub</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/themes.css">
+</head>
+<body class="login-page" id="loginPage">
+
+  <!-- Floating particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Logo -->
+      <div class="login-logo">
+        <h1 class="login-logo__title">
+          HUNTER<span class="login-logo__x">×</span>GAME
+        </h1>
+      </div>
+
+      <p class="login-subtitle">Dev Hub — Team Access Only</p>
+
+      <!-- Error message -->
+      <div class="login-error" id="loginError">
+        Invalid credentials. Try again.
+      </div>
+
+      <!-- Form -->
+      <form class="login-form" id="loginForm" autocomplete="off">
+        <div class="input-group">
+          <input
+            type="text"
+            class="input-group__input"
+            id="loginUsername"
+            placeholder="username"
+            required
+            autocomplete="username"
+          >
+          <span class="input-group__icon">👤</span>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="password"
+            class="input-group__input"
+            id="loginPassword"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          >
+          <span class="input-group__icon">🔒</span>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span class="login-btn__text">Enter</span>
+          <span class="spinner"></span>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        Use your assigned dev / admin / guest credentials<br>
+        <span class="login-footer__highlight">Guest access is read-only</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Particle generation
+    (function() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (8 + Math.random() * 12) + 's';
+        p.style.animationDelay = Math.random() * 8 + 's';
+        p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+        container.appendChild(p);
+      }
+    })();
+  </script>
+</body>
+</html>
